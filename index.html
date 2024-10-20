@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมฝึกคิดเลข</title>
+    <style>
+        body {
+            background-color: #FFD1DC; /* สีชมพูอ่อน */
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            color: #FF69B4; /* สีฟ้า */
+        }
+        .question {
+            font-size: 24px;
+            margin: 20px;
+        }
+        .score {
+            font-size: 20px;
+        }
+        input {
+            font-size: 20px;
+            padding: 5px;
+            width: 100px;
+            margin: 10px;
+        }
+        button {
+            font-size: 20px;
+            background-color: #FFB6C1; /* สีชมพู */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FF69B4; /* สีชมพูเข้ม */
+        }
+    </style>
+</head>
+<body>
+
+<h1>เกมฝึกคิดเลข</h1>
+<div class="question" id="question"></div>
+<input type="text" id="answer" placeholder="คำตอบ">
+<button id="checkButton">ตรวจสอบ</button>
+<div class="score" id="score">คะแนน: 0</div>
+
+<script>
+    let score = 0;
+    let numQuestions = 0;
+    let currentAnswer;
+
+    function generateQuestion() {
+        const num1 = Math.floor(Math.random() * 20) + 1;
+        const num2 = Math.floor(Math.random() * 20) + 1;
+        const operations = ['+', '-', '*', '/'];
+        const operation = operations[Math.floor(Math.random() * operations.length)];
+
+        if (operation === '+') {
+            currentAnswer = num1 + num2;
+        } else if (operation === '-') {
+            currentAnswer = num1 - num2;
+        } else if (operation === '*') {
+            currentAnswer = num1 * num2;
+        } else {
+            // ป้องกันการหารด้วยศูนย์
+            if (num2 === 0) {
+                return generateQuestion();
+            }
+            currentAnswer = num1 / num2;
+        }
+
+        document.getElementById('question').innerText = `${num1} ${operation} ${num2} = ?`;
+        document.getElementById('answer').value = '';
+    }
+
+    function checkAnswer() {
+        const userAnswer = parseFloat(document.getElementById('answer').value);
+        if (isNaN(userAnswer)) {
+            alert("โปรดป้อนตัวเลขเท่านั้น");
+            return;
+        }
+
+        if (userAnswer === currentAnswer) {
+            score++;
+            numQuestions++;
+            alert("คำตอบถูกต้อง!");
+        } else {
+            numQuestions++;
+            alert(`คำตอบไม่ถูก คำตอบที่ถูกคือ ${currentAnswer}`);
+        }
+
+        document.getElementById('score').innerText = `คะแนน: ${score}`;
+        generateQuestion();
+    }
+
+    document.getElementById('checkButton').onclick = checkAnswer;
+    document.getElementById('answer').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    // เริ่มเกม
+    generateQuestion();
+</script>
+
+</body>
+</html>
